@@ -1,0 +1,137 @@
+# Craftline
+
+A free Astro theme for local service businesses: plumbers, electricians, cleaners, handymen and contractors.
+
+The demo business is **Northside Plumbing & Heating**, a fictional plumber in the fictional town of Fernhollow. Everything you see is sample content: phone numbers use the 555-01xx range reserved for fiction, and every email and link uses `example.com`.
+
+- **One file to rebrand.** Name, phone, address, service areas, hours, social links, accent color and the form key live in `src/config.ts`.
+- **A home page that tells a story.** The hero illustration is the first frame of a scroll story: a leak at 11:40 pm, a form sent from a phone, a van on the way, a fixed price, a dry floor. It is one SVG driven by CSS scroll-driven animations. No animation library, no JavaScript.
+- **A quote form that never fakes success.** It shows "Request received" only when the form backend answers `success: true`. Errors and lost connections show an error. Without JavaScript it still works as a plain HTML form.
+- **Fast and accessible.** Static pages, one self-hosted variable font, two tiny scripts (the form and closing the mobile menu). Labels on every field, visible focus, AA contrast, `prefers-reduced-motion` respected, light theme by default and dark via `prefers-color-scheme`.
+
+Built with Astro 7, Tailwind CSS 4 and TypeScript.
+
+## Quick start
+
+```sh
+npm create astro@latest -- --template formgong/craftline-astro-theme
+cd your-project
+npm run dev
+```
+
+Or clone the repository and run `npm install`, then `npm run dev`. Node 22.12 or newer is required.
+
+| Command           | What it does                                   |
+| ----------------- | ---------------------------------------------- |
+| `npm run dev`     | Local dev server at `http://localhost:4321`    |
+| `npm run build`   | Static site in `dist/`                         |
+| `npm run preview` | Serve the built site locally                   |
+| `npm run check`   | Type-check `.astro` and `.ts` files            |
+
+## Rebrand it
+
+Open `src/config.ts`. The main fields:
+
+| Field                         | Used for                                                                     |
+| ----------------------------- | ---------------------------------------------------------------------------- |
+| `name`, `shortName`, `tagline`, `description` | Header, footer, page titles, meta description, JSON-LD       |
+| `url`                         | Canonical URLs, Open Graph, sitemap, robots.txt and the form's redirect      |
+| `schemaType`                  | schema.org type: `Plumber`, `Electrician`, `HVACBusiness`, `RoofingContractor`, `GeneralContractor` or `LocalBusiness` |
+| `phone`, `emergencyPhone`, `email`, `address` | Click-to-call buttons, contact page, footer, JSON-LD          |
+| `serviceAreas`                | Service area list and map (the first eight get a pin), JSON-LD `areaServed`  |
+| `hours`, `hoursNote`          | Contact page, footer, JSON-LD opening hours                                  |
+| `social`                      | Footer icons. Real profile URLs are also added to JSON-LD `sameAs`           |
+| `trust`                       | License number, years, rating, response time, call-out fee. Sample values: replace them, then clear `trust.note` |
+| `theme.accent`, `theme.accentText` | The one accent color, and the text color on accent buttons (keep 4.5:1 contrast) |
+| `formgong`                    | Fallback access key, endpoint and email subject for the quote form           |
+
+Replace the logo in `src/components/Logo.astro` and `public/favicon.svg`, and regenerate `public/og.png` (1200×630) and `public/apple-touch-icon.png` (180×180).
+
+The JSON-LD block deliberately has no star rating: search engines ignore ratings a business publishes about itself.
+
+## Set up the form
+
+The quote form posts to [Formgong](https://formgong.com), a hosted form backend, so you don't need a server.
+
+1. Create a free form at [formgong.com/new](https://formgong.com/new?name=Website%20quote%20form) (or from the dashboard if you already have an account).
+2. Copy the form's access key. It starts with `fk_` and is public by design: it only lets visitors send submissions to that one form.
+3. Add it to a `.env` file in the project root:
+
+   ```sh
+   PUBLIC_FORMGONG_ACCESS_KEY=fk_your_access_key
+   ```
+
+   or set `formgong.accessKey` in `src/config.ts`. While the placeholder key is in use, the dev server shows a reminder above the form.
+4. Set `url` in `src/config.ts` to your real domain. Visitors without JavaScript are redirected to `/thanks/` on that domain.
+
+Submissions arrive by email and, if you connect it, in Telegram. The free plan covers 300 submissions a month.
+
+**How the form behaves**
+
+- Without JavaScript: a normal `POST` to `https://formgong.com/submit`. The hidden `_redirect` field sends the visitor to `/thanks/` afterwards.
+- With JavaScript: the same fields are sent with `fetch` and `Accept: application/json`. The button is disabled while sending. The success state, with its checkmark animation, appears only when the JSON response has `success === true`. Any other response shows the server's `message`. A network failure shows an error and the phone number.
+- The hidden `botcheck` field is a spam honeypot. Keep it empty and keep it in the markup.
+
+**Using another form backend.** Any service that accepts a standard form `POST` works. Set `PUBLIC_FORMGONG_ENDPOINT` (or `formgong.endpoint`) to its URL and rename the hidden fields to what that service expects. If its JSON response is shaped differently, change the single `reply?.success === true` check in `src/components/QuoteForm.astro`.
+
+## Edit the content
+
+- **Services:** one Markdown file per service in `src/content/services/`. Frontmatter: `title`, `summary`, `order`, `priceFrom`, `priceNote`, `duration`, `included` (list) and `featured` (the dark card shown first in the grid). The body is the service page.
+- **Testimonials:** `src/content/testimonials.json`. Each review can point to a service by its file name. The demo reviews are samples and are labeled as such on the page.
+- **FAQ:** `src/content/faq.json`.
+- **Page copy:** the home page story captions are in `src/components/story/StoryHero.astro`; the hero headline and bullets in `src/pages/index.astro`.
+
+Some sample figures appear in copy as well as in the config (the $129 call-out in the FAQ, the $149 repair in the story). Search for `$` when you change prices.
+
+## The home page story
+
+Three files:
+
+- `src/components/story/StoryHero.astro`: hero text and the six chapter captions.
+- `src/components/story/StoryScene.astro`: the SVG. Its objects stay on screen and change between chapters.
+- `src/styles/story.css`: layout and timelines.
+
+Each caption block declares a named view timeline (`--ch1` … `--ch6`) and the story wrapper shares them with `timeline-scope`. Every animated part of the scene follows exactly one chapter, with `animation-range` set per layout. When something has to appear in one chapter and leave in a later one, it sits inside two nested groups with one animation each. On desktop the scene is pinned next to the captions; on phones it is pinned at the top (about 55% of the screen) and the captions scroll underneath.
+
+Browsers without scroll-driven animations or `timeline-scope`, and visitors who prefer reduced motion, get a static version: the scene shows the calm house and each caption gets a small picture. Nothing is hidden. The scroll version was verified in Chrome.
+
+To adapt the story to another trade, rewrite the captions and redraw the parts of the scene you need, or replace `StoryHero` with a plain hero in `src/pages/index.astro`.
+
+Two CSS details that keep it working:
+
+- Scroll-driven rules use longhand properties (`animation-name`, `animation-timeline`, …). A minifier can merge a shorthand and `animation-timeline` into one declaration that Chrome rejects.
+- Wrappers around revealed content use `overflow: clip`, not `overflow: hidden`. `overflow: hidden` creates a scroll container, and a view timeline inside it would track that box instead of the page.
+
+## Motion
+
+All motion is CSS and SVG. Page-to-page transitions use native cross-document View Transitions (`@view-transition`), so there is no client router. Sections fade in with `animation-timeline: view()` where supported. Hover effects move only `transform` and `opacity`. With `prefers-reduced-motion: reduce` there are no transitions, reveals or ambient animations.
+
+## Project structure
+
+```text
+src/
+├── components/
+│   ├── story/          StoryHero, StoryScene (SVG), StoryVignette (static fallback pictures)
+│   ├── sections/       Trust strip, services grid, how it works, areas, reviews, FAQ, quote section
+│   ├── illustrations/  Van, map placeholder
+│   ├── QuoteForm.astro The form and its script
+│   ├── Head.astro      Meta tags, Open Graph, JSON-LD
+│   ├── Header.astro, Footer.astro, Logo.astro, Icon.astro, icons.ts
+│   └── PageHeader.astro, SectionHeading.astro, ServiceCard.astro
+├── content/            services/*.md, testimonials.json, faq.json
+├── layouts/            BaseLayout.astro
+├── lib/schema.ts       JSON-LD built from the config
+├── pages/              index, about, contact, thanks, 404, services/, robots.txt.ts
+├── styles/             global.css (tokens, components, motion), story.css
+├── config.ts           Everything you rebrand
+└── content.config.ts   Collection schemas
+public/                 favicon.svg, og.png, apple-touch-icon.png
+```
+
+## Deploy
+
+`npm run build` produces a static site in `dist/` that any static host can serve. Set `url` in `src/config.ts` first so canonical links, the sitemap and the form redirect point at your domain.
+
+## License
+
+MIT, see `LICENSE`. The illustrations and icons were drawn for this theme and are covered by the same license. The font is Plus Jakarta Sans, licensed under the SIL Open Font License 1.1 and installed from `@fontsource-variable/plus-jakarta-sans`.

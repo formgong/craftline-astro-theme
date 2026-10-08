@@ -1,0 +1,85 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { SITE } from "../config";
+import Icon from "./Icon.astro";
+
+interface Props {
+  service: CollectionEntry<"services">;
+}
+const { service } = Astro.props;
+const { title, summary, priceFrom, priceNote, duration, featured } = service.data;
+---
+
+<article class:list={["card card-lift flex h-full flex-col p-7", featured && "featured"]}>
+  {
+    priceFrom && (
+      <p class="price-row">
+        <span class="text-3xl font-extrabold tracking-tight">{priceFrom}</span>
+        {priceNote && <span class="price-note">{priceNote}</span>}
+      </p>
+    )
+  }
+  <h3 class="mt-6 text-xl font-bold tracking-tight">
+    <a href={`/services/${service.id}/`} class="stretched rounded-md">{title}</a>
+  </h3>
+  <p class="desc mt-3 flex-1 leading-relaxed">{summary}</p>
+  <div class="foot mt-6 flex items-center justify-between gap-4 pt-5 text-sm">
+    {duration ? <span class="inline-flex items-center gap-2"><Icon name="clock" size={16} />{duration}</span> : <span />}
+    <Icon name="arrow-right" size={18} class="card-arrow" />
+  </div>
+  {
+    featured && (
+      <a href={`tel:${SITE.emergencyPhone.tel}`} class="btn btn-primary relative z-10 mt-6">
+        <Icon name="phone" /> {SITE.emergencyPhone.display}
+      </a>
+    )
+  }
+</article>
+
+<style>
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.625rem;
+  }
+  .price-note {
+    font-size: 0.875rem;
+    color: var(--c-muted);
+  }
+  .desc {
+    color: var(--c-muted);
+  }
+  .foot {
+    border-top: 1px solid var(--c-line);
+    color: var(--c-muted);
+  }
+  .card-arrow {
+    color: var(--accent-ink);
+    transition: transform 0.3s var(--ease-out);
+  }
+  article:hover .card-arrow {
+    transform: translateX(4px);
+  }
+  .featured {
+    background: var(--c-deep);
+    border-color: var(--c-deep);
+    color: #fff;
+  }
+  .featured .price-note,
+  .featured .desc,
+  .featured .foot {
+    color: rgb(255 255 255 / 0.75);
+  }
+  .featured .foot {
+    border-color: rgb(255 255 255 / 0.15);
+  }
+  .featured .card-arrow {
+    color: #fff;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    article:hover .card-arrow {
+      transform: none;
+    }
+  }
+</style>

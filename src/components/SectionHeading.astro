@@ -1,0 +1,16 @@
+---
+interface Props {
+  title: string;
+  lead?: string;
+  align?: "left" | "center";
+  id?: string;
+  class?: string;
+}
+const { title, lead, align = "left", id, class: className } = Astro.props;
+---
+
+<div class:list={["reveal max-w-3xl", align === "center" && "mx-auto text-center", className]}>
+  <h2 id={id} class="h-section">{title}</h2>
+  {lead && <p class="lead mt-5">{lead}</p>}
+  <slot />
+</div>

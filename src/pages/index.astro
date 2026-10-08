@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StoryHero from "../components/story/StoryHero.astro";
+import TrustStrip from "../components/sections/TrustStrip.astro";
+import ServicesGrid from "../components/sections/ServicesGrid.astro";
+import ServiceAreas from "../components/sections/ServiceAreas.astro";
+import Testimonials from "../components/sections/Testimonials.astro";
+import Faq from "../components/sections/Faq.astro";
+import QuoteSection from "../components/sections/QuoteSection.astro";
+import { SITE } from "../config";
+---
+
+<BaseLayout description={SITE.description}>
+  <StoryHero
+    title="Plumbing and heating repairs, priced before we start."
+    highlight="priced before we start"
+    lead={`Licensed plumbers, stocked vans and a dispatcher who answers at 3 am. Most repairs are finished on the first visit, and our labor is guaranteed for two years.`}
+    points={[`${SITE.trust.callOut} call-out, taken off the repair`, "Written price before work starts", "2-year guarantee on labor"]}
+  />
+  <TrustStrip />
+  <ServicesGrid />
+  <ServiceAreas />
+  <Testimonials />
+  <Faq />
+  <QuoteSection />
+</BaseLayout>

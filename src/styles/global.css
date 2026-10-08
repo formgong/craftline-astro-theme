@@ -1,0 +1,506 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens
+   The accent color comes from src/config.ts (set on <html> by the layout).
+   Every other color is a semantic token with a dark-mode value.
+------------------------------------------------------------------ */
+:root {
+  --accent: #c2410c;
+  --accent-text: #ffffff;
+  --c-bg: #f8f7f4;
+  --c-surface: #ffffff;
+  --c-surface-2: #f1eee8;
+  --c-ink: #0f1a2a;
+  --c-muted: #475467;
+  --c-line: #e4e0d7;
+  --c-deep: #0f1d2e;
+  --c-success: #067647;
+  --c-danger: #b42318;
+  /* accent used as text on the page background */
+  --accent-ink: var(--accent);
+  --accent-soft: color-mix(in oklab, var(--accent) 9%, var(--c-surface));
+  --shadow: 220 45% 12%;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-bg: #0a111c;
+    --c-surface: #101a29;
+    --c-surface-2: #15213a;
+    --c-ink: #edf1f6;
+    --c-muted: #a9b4c5;
+    --c-line: #233149;
+    --c-deep: #0d1828;
+    --c-success: #47cd89;
+    --c-danger: #fd7c70;
+    --accent-ink: color-mix(in oklab, var(--accent) 52%, white);
+    --accent-soft: color-mix(in oklab, var(--accent) 20%, var(--c-surface));
+    --shadow: 220 60% 2%;
+    color-scheme: dark;
+  }
+}
+
+@theme {
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-ink: var(--c-ink);
+  --color-muted: var(--c-muted);
+  --color-line: var(--c-line);
+  --color-deep: var(--c-deep);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--c-success);
+  --color-danger: var(--c-danger);
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------ */
+@layer base {
+  html {
+    background: var(--c-bg);
+    color: var(--c-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    min-height: 100dvh;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 25%, transparent);
+  }
+  :focus-visible {
+    outline: 3px solid var(--accent-ink);
+    outline-offset: 3px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Components
+------------------------------------------------------------------ */
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .section {
+    @apply py-20 sm:py-24 lg:py-28;
+  }
+  .h-display {
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.25rem);
+    line-height: 1.03;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+  }
+  .h-section {
+    font-size: clamp(2rem, 1.45rem + 2.2vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    font-weight: 760;
+  }
+  .lead {
+    @apply text-lg leading-relaxed text-muted sm:text-xl sm:leading-relaxed;
+  }
+
+  /* Buttons. Shadows live on a pseudo-element so hover only animates opacity and transform. */
+  .btn {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.75rem 1.375rem;
+    border-radius: 0.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition:
+      transform 0.25s var(--ease-out),
+      background-color 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+  }
+  .btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    box-shadow: 0 14px 28px -12px hsl(var(--shadow) / 0.45);
+    opacity: 0;
+    transition: opacity 0.25s var(--ease-out);
+  }
+  .btn:hover::after {
+    opacity: 1;
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn .icon {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .btn .icon-shift {
+    transition: transform 0.25s var(--ease-out);
+  }
+  .btn:hover .icon-shift {
+    transform: translateX(3px);
+  }
+  .btn-lg {
+    min-height: 3.5rem;
+    padding-inline: 1.75rem;
+    font-size: 1.0625rem;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-text);
+  }
+  .btn-primary:hover {
+    background: color-mix(in oklab, var(--accent) 86%, black);
+  }
+  .btn-secondary {
+    background: var(--c-surface);
+    color: var(--c-ink);
+    border: 1px solid var(--c-line);
+  }
+  .btn-secondary:hover {
+    border-color: color-mix(in oklab, var(--c-ink) 35%, transparent);
+  }
+  .btn-on-dark {
+    background: rgb(255 255 255 / 0.08);
+    color: #fff;
+    border: 1px solid rgb(255 255 255 / 0.22);
+  }
+  .btn-on-dark:hover {
+    background: rgb(255 255 255 / 0.14);
+  }
+
+  .card {
+    position: relative;
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: 1.25rem;
+  }
+  .card-lift {
+    transition:
+      transform 0.35s var(--ease-out),
+      border-color 0.25s;
+  }
+  .card-lift::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    box-shadow: 0 30px 60px -30px hsl(var(--shadow) / 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease-out);
+  }
+  .card-lift:hover,
+  .card-lift:focus-within {
+    transform: translateY(-4px);
+    border-color: color-mix(in oklab, var(--accent) 45%, var(--c-line));
+  }
+  .card-lift:hover::after,
+  .card-lift:focus-within::after {
+    opacity: 1;
+  }
+  /* Whole card clickable, one real link inside it. */
+  .stretched::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: 1.25rem;
+  }
+
+  /* Form fields */
+  .field-label {
+    @apply mb-2 block text-sm font-semibold text-ink;
+  }
+  .field-hint {
+    @apply font-normal text-muted;
+  }
+  .field {
+    @apply block w-full rounded-xl border border-line bg-surface px-4 py-3 text-base text-ink;
+    min-height: 3rem;
+    transition: border-color 0.2s;
+  }
+  .field::placeholder {
+    color: color-mix(in oklab, var(--c-muted) 80%, transparent);
+  }
+  .field:hover {
+    border-color: color-mix(in oklab, var(--c-ink) 30%, var(--c-line));
+  }
+  .field:focus-visible {
+    outline: 3px solid color-mix(in oklab, var(--accent) 35%, transparent);
+    outline-offset: 0;
+    border-color: var(--accent);
+  }
+  .field:user-invalid {
+    border-color: var(--c-danger);
+  }
+  select.field {
+    appearance: none;
+    padding-right: 2.75rem;
+  }
+
+  /* Markdown body of service pages */
+  .prose-craft {
+    @apply text-lg leading-relaxed text-muted;
+  }
+  .prose-craft > * + * {
+    margin-top: 1.25rem;
+  }
+  .prose-craft h2 {
+    @apply mt-12 text-2xl font-bold tracking-tight text-ink;
+  }
+  .prose-craft ul {
+    @apply space-y-2;
+  }
+  .prose-craft li {
+    @apply relative pl-7;
+  }
+  .prose-craft li::before {
+    content: "";
+    @apply absolute top-[0.7em] left-1 size-2 rounded-full bg-accent;
+  }
+  .prose-craft a {
+    @apply font-semibold text-accent-ink underline underline-offset-4;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Motion
+   Default state = final state, so content is visible if any animation
+   is unsupported or switched off. Movement only runs when the visitor
+   has not asked for reduced motion.
+------------------------------------------------------------------ */
+
+/* Page transitions: native cross-document View Transitions, no JavaScript. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root) {
+    animation: vt-out 0.18s var(--ease-in-out) both;
+  }
+  ::view-transition-new(root) {
+    animation: vt-in 0.32s var(--ease-out) both;
+  }
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  .pulse-ring {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pulse-ring 2.4s var(--ease-out) infinite;
+    animation-delay: var(--d, 0s);
+  }
+}
+
+/* Scroll-driven reveals. Browsers without view timelines simply show the content.
+   Use overflow: clip (not hidden) on wrappers: overflow: hidden makes a scroll container,
+   and a view() timeline inside it would track that box instead of the page.
+   Longhands on purpose: the minifier folds a shorthand + animation-timeline into one
+   "animation: … view()" declaration, which Chrome rejects. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal,
+    .stagger > *,
+    .pin-drop {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+    }
+    /* Fixed-length ranges: an element is fully shown once its top is ~140px inside the
+       viewport, however tall it is. Anything already in view on load is fully visible. */
+    .reveal {
+      animation-name: reveal-up;
+      animation-range: entry 0px entry 140px;
+    }
+    .stagger > * {
+      animation-name: reveal-up;
+      animation-range: entry calc(var(--i, 0) * 36px) entry calc(140px + var(--i, 0) * 36px);
+    }
+    .pin-drop {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation-name: pin-drop;
+      animation-range: entry calc(40px + var(--i, 0) * 24px) entry calc(180px + var(--i, 0) * 24px);
+    }
+  }
+}
+
+/* Sticky header: background fades in and the logo tightens as the page scrolls. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .header-backdrop,
+    .header-logo {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll();
+      animation-range: 0 96px;
+    }
+    .header-backdrop {
+      animation-name: header-in;
+    }
+    .header-logo {
+      transform-origin: left center;
+      animation-name: header-logo;
+    }
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes flow {
+  to {
+    stroke-dashoffset: -0.09;
+  }
+}
+@keyframes glow {
+  50% {
+    opacity: 0.45;
+  }
+}
+@keyframes pulse-ring {
+  from {
+    opacity: 0.7;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+@keyframes pin-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+@keyframes header-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes header-logo {
+  to {
+    transform: scale(0.9);
+  }
+}
+
+/* Form states */
+@keyframes shake {
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .is-sending .spinner {
+    animation: spin 0.8s linear infinite;
+  }
+  .form-success:not([hidden]) {
+    animation: rise-in 0.5s var(--ease-out) both;
+  }
+  .form-success:not([hidden]) .check-ring {
+    animation: draw 0.7s var(--ease-out) 0.1s both;
+  }
+  .form-success:not([hidden]) .check-mark {
+    animation: draw 0.45s var(--ease-out) 0.65s both;
+  }
+  .form-error:not([hidden]) {
+    animation: shake 0.42s var(--ease-in-out);
+  }
+  .faq-item[open] .faq-answer {
+    animation: rise-in 0.35s var(--ease-out);
+  }
+}
+
+/* Safety net: anything that still moves gets reduced to an instant change. */
+@media (prefers-reduced-motion: reduce) {
+  .card-lift:hover,
+  .card-lift:focus-within,
+  .btn:hover .icon-shift,
+  .btn:active {
+    transform: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
