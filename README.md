@@ -4,6 +4,10 @@ A free Astro theme for local service businesses: plumbers, electricians, cleaner
 
 **Live demo:** https://craftline.formgong.com · **No build step?** Download `craftline-html.zip` from the [latest release](https://github.com/formgong/craftline-astro-theme/releases/latest): plain HTML files, replace `fk_your_access_key` and `https://example.com` with your own and upload them anywhere.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fformgong%2Fcraftline-astro-theme&project-name=craftline&repository-name=craftline&env=PUBLIC_FORMGONG_ACCESS_KEY&envDescription=Your%20Formgong%20access%20key%20%28fk_...%29.%20Create%20a%20free%20form%20to%20get%20one.&envLink=https%3A%2F%2Fformgong.com%2Fnew%3Fname%3Dcraftline)
+
+The button copies the theme to your GitHub, builds it and asks for one value: your Formgong access key (`fk_…`), free at https://formgong.com/new. The form works from the first deploy. Then set `url` in `src/config.ts` to your domain.
+
 The demo business is **Northside Plumbing & Heating**, a fictional plumber in the fictional town of Fernhollow. Everything you see is sample content: phone numbers use the 555-01xx range reserved for fiction, and every email and link uses `example.com`.
 
 - **One file to rebrand.** Name, phone, address, service areas, hours, social links, accent color and the form key live in `src/config.ts`.
@@ -143,7 +147,7 @@ public/                 favicon.svg, og.png, apple-touch-icon.png
 
 ## Deploy
 
-`npm run build` produces a static site in `dist/` that any static host can serve. Set `url` in `src/config.ts` first so canonical links, the sitemap and the form redirect point at your domain.
+`npm run build` produces a static site in `dist/` that any static host can serve. On Vercel, Netlify or Cloudflare, set `PUBLIC_FORMGONG_ACCESS_KEY` in the project's build environment variables: the key is read at build time. Set `url` in `src/config.ts` first so canonical links, the sitemap and the form redirect point at your domain.
 
 ## License
 
