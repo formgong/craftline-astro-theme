@@ -34,10 +34,170 @@
   overflow: clip;
   box-shadow: 0 40px 80px -48px hsl(var(--shadow) / 0.6);
 }
+.story-frame {
+  position: relative;
+  container-type: size;
+}
+
+/* ---------- scene layers: sky (SVG) · 3D house (CSS) · overlays (SVG) ----------
+   All three share one coordinate system: a 1200×600 canvas, anchored right and centred
+   vertically. One canvas unit is --u px, so a canvas point (x, y) sits at
+   left = 100cqw − (600 − x)·u, top = 50cqh − (300 − y)·u. By default the canvas covers the
+   frame (like preserveAspectRatio "slice"); the SVGs are sized in the same units, and the
+   sky and ground are drawn beyond the canvas for frames that need more of them. */
+.sc-layers {
+  --u: max(100cqw / 1200, 100cqh / 600);
+  position: absolute;
+  inset: 0;
+  perspective: calc(1300 * var(--u));
+  perspective-origin: 50% 20%;
+}
 .sc-svg {
+  position: absolute;
+  right: 0;
+  top: calc(50cqh - 300 * var(--u));
+  display: block;
+  width: calc(1200 * var(--u));
+  height: calc(600 * var(--u));
+  overflow: visible;
+}
+.sc-front {
+  pointer-events: none;
+}
+
+/* The house: 300 wide, 216 tall walls, 114 gable, 200 deep (canvas units). The front face
+   sits on the screen plane (z = 0) exactly where the flat drawing was; the box goes back. */
+.h3d {
+  position: absolute;
+  left: calc(100cqw - 370 * var(--u));
+  top: calc(50cqh + 62 * var(--u));
+  transform: translateZ(calc(-100 * var(--u)));
+}
+.h3d,
+.h3d-r {
+  transform-style: preserve-3d;
+}
+.h3d-r {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.h3d-face {
+  position: absolute;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.h3d-face > svg {
   display: block;
   width: 100%;
   height: 100%;
+  overflow: visible;
+}
+.h3d-front,
+.h3d-back {
+  left: calc(-150 * var(--u));
+  top: calc(-222 * var(--u));
+  width: calc(300 * var(--u));
+  height: calc(330 * var(--u));
+}
+.h3d-front {
+  transform: translateZ(calc(100 * var(--u)));
+}
+.h3d-back {
+  transform: rotateY(180deg) translateZ(calc(100 * var(--u)));
+}
+.h3d-left,
+.h3d-right {
+  left: calc(-100 * var(--u));
+  top: calc(-108 * var(--u));
+  width: calc(200 * var(--u));
+  height: calc(216 * var(--u));
+}
+.h3d-left {
+  transform: rotateY(-90deg) translateZ(calc(150 * var(--u)));
+}
+.h3d-right {
+  transform: rotateY(90deg) translateZ(calc(150 * var(--u)));
+}
+.h3d-floor {
+  left: calc(-150 * var(--u));
+  top: calc(-100 * var(--u));
+  width: calc(300 * var(--u));
+  height: calc(200 * var(--u));
+  background: #0a1426;
+  transform: rotateX(-90deg) translateZ(calc(108 * var(--u)));
+}
+/* Roof: two planes hinged on the ridge (gable peak, y −222), slope 37.2°, 16 units of eave. */
+.h3d-roof {
+  left: calc(-106 * var(--u));
+  top: calc(-116 * var(--u));
+  width: calc(212 * var(--u));
+  height: calc(232 * var(--u));
+  border: calc(3 * var(--u)) solid var(--sc-line);
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+}
+.h3d-roof-l {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(19 * var(--u)), rgb(198 210 229 / 0.16) 0 calc(20 * var(--u))),
+    #15243f;
+  transform: translateY(calc(-222 * var(--u))) rotateZ(-37.23deg) translateX(calc(-105 * var(--u))) rotateX(90deg);
+}
+.h3d-roof-r {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(19 * var(--u)), rgb(198 210 229 / 0.16) 0 calc(20 * var(--u))),
+    #1e3158;
+  transform: translateY(calc(-222 * var(--u))) rotateZ(37.23deg) translateX(calc(105 * var(--u))) rotateX(90deg);
+}
+.h3d-chimney {
+  transform: translate3d(calc(95 * var(--u)), calc(-169 * var(--u)), calc(-40 * var(--u)));
+}
+.h3d-ch {
+  left: calc(-13 * var(--u));
+  top: calc(-37 * var(--u));
+  width: calc(26 * var(--u));
+  height: calc(74 * var(--u));
+  background: #16264a;
+  border: calc(2.5 * var(--u)) solid var(--sc-line);
+}
+.h3d-ch-front {
+  transform: translateZ(calc(13 * var(--u)));
+}
+.h3d-ch-back {
+  transform: rotateY(180deg) translateZ(calc(13 * var(--u)));
+}
+.h3d-ch-left {
+  background: #101b31;
+  transform: rotateY(-90deg) translateZ(calc(13 * var(--u)));
+}
+.h3d-ch-right {
+  background: #1e3158;
+  transform: rotateY(90deg) translateZ(calc(13 * var(--u)));
+}
+.h3d-ch-top {
+  left: calc(-13 * var(--u));
+  top: calc(-13 * var(--u));
+  width: calc(26 * var(--u));
+  height: calc(26 * var(--u));
+  background: #0b1528;
+  border: calc(2.5 * var(--u)) solid var(--sc-line);
+  transform: rotateX(90deg) translateZ(calc(37 * var(--u)));
+}
+
+/* Hero turntable. --spin runs on a clock, --spin-on fades from 1 to 0 as chapter 1 arrives,
+   so the house unwinds to face the viewer by the shortest way (|spin| ≤ 180°). */
+@property --spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --spin-on {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+.h3d-idle {
+  transform: rotateY(calc(var(--spin) * var(--spin-on)));
 }
 .story-heading {
   font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
@@ -393,6 +553,11 @@
         height: 100%;
         aspect-ratio: auto;
       }
+      /* On tall-ish wide frames (e.g. 1920×1080) don't scale past the point where the house
+         drifts under the text: keep its centre (x 230) at 62% of the width or further right. */
+      .sc-layers {
+        --u: min(max(100cqw / 1200, 100cqh / 600), 100cqw / 974);
+      }
       .story-hero,
       .story-chapters {
         grid-column: 1;
@@ -410,8 +575,9 @@
         padding-block: 2rem;
       }
       .story-hero .text-muted,
+      .story-hero .lead,
       .story-chapters .chapter-body {
-        color: rgb(238 242 248 / 0.74);
+        color: rgb(238 242 248 / 0.78);
       }
       .story-hero .text-accent-ink,
       .story-chapters .chapter-time {
@@ -471,6 +637,28 @@
       animation-fill-mode: both;
       animation-range: var(--ch-range);
     }
+
+    /* the house: idle turntable in the hero, then one rotation wrapper per chapter */
+    .h3d-idle {
+      animation-name: h3d-spin, h3d-settle;
+      animation-duration: 24s, auto;
+      animation-delay: -12s, 0s;
+      animation-timing-function: linear, linear;
+      animation-iteration-count: infinite, 1;
+      animation-fill-mode: none, both;
+      animation-timeline: auto, --ch1;
+      animation-range: normal, var(--ch-range);
+    }
+    .h3d-c2, .h3d-c3, .h3d-c4, .h3d-c5, .h3d-c6 {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-range: var(--ch-range);
+    }
+    .h3d-c2 { animation-name: h3d-sway-left; animation-timeline: --ch2; }
+    .h3d-c3 { animation-name: h3d-sway-right; animation-timeline: --ch3; }
+    .h3d-c4 { animation-name: h3d-look-at-van; animation-timeline: --ch4; }
+    .h3d-c5 { animation-name: h3d-sway-left-small; animation-timeline: --ch5; }
+    .h3d-c6 { animation-name: h3d-three-quarter; animation-timeline: --ch6; }
 
     /* 1 · lights go out */
     .sc-light-a { animation-name: k-out-25-50; animation-timeline: --ch1; }
@@ -677,4 +865,37 @@
   0% { opacity: 0.25; }
   30%, 70% { opacity: 1; }
   100% { opacity: 0.25; }
+}
+
+@keyframes h3d-spin {
+  from { --spin: -180deg; }
+  to { --spin: 180deg; }
+}
+@keyframes h3d-settle {
+  from { --spin-on: 1; }
+  to { --spin-on: 0; }
+}
+@keyframes h3d-sway-left {
+  0%, 10% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
+  50% { transform: rotateY(-12deg); animation-timing-function: ease-in-out; }
+  90%, 100% { transform: rotateY(0deg); }
+}
+@keyframes h3d-sway-right {
+  0%, 10% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
+  50% { transform: rotateY(12deg); animation-timing-function: ease-in-out; }
+  90%, 100% { transform: rotateY(0deg); }
+}
+@keyframes h3d-look-at-van {
+  0%, 25% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
+  65% { transform: rotateY(15deg); animation-timing-function: ease-in-out; }
+  95%, 100% { transform: rotateY(0deg); }
+}
+@keyframes h3d-sway-left-small {
+  0%, 10% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
+  40% { transform: rotateY(-9deg); animation-timing-function: ease-in-out; }
+  80%, 100% { transform: rotateY(0deg); }
+}
+@keyframes h3d-three-quarter {
+  0%, 10% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
+  75%, 100% { transform: rotateY(-36deg); }
 }

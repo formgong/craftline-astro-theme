@@ -26,6 +26,8 @@ Craftline is a static Astro 7 theme (Tailwind CSS 4, TypeScript). Read `README.m
 - Use `overflow: clip` (not `hidden`) on wrappers around revealed content; `hidden` creates a scroll container that view timelines then track.
 - Astro component `<style>` blocks are unlayered and beat Tailwind utilities. Don't set `display` in a component style on an element that also uses responsive display utilities.
 - Default (non-animated) styles must show the content. Motion goes inside `@media (prefers-reduced-motion: no-preference)`.
+- The 3D house (`House3D.astro`): every wrapper between `.h3d` and the faces keeps `transform-style: preserve-3d`. Don't put opacity, filter, clip-path, overflow or isolation on those wrappers; any of them flattens the house. Position anything new in canvas units (`var(--u)`), never in percentages of the frame.
+- Playwright WebKit screenshots flatten 3D transforms; check 3D in WebKit with a recorded video instead.
 
 ## Docs
 
