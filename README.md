@@ -2,6 +2,8 @@
 
 A free Astro theme for local service businesses: plumbers, electricians, cleaners, handymen and contractors.
 
+**Live demo:** https://craftline.formgong.com · **No build step?** Download `craftline-html.zip` from the [latest release](https://github.com/formgong/craftline-astro-theme/releases/latest): plain HTML files, replace `fk_your_access_key` and `https://example.com` with your own and upload them anywhere.
+
 The demo business is **Northside Plumbing & Heating**, a fictional plumber in the fictional town of Fernhollow. Everything you see is sample content: phone numbers use the 555-01xx range reserved for fiction, and every email and link uses `example.com`.
 
 - **One file to rebrand.** Name, phone, address, service areas, hours, social links, accent color and the form key live in `src/config.ts`.
