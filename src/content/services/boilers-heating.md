@@ -1,6 +1,7 @@
 ---
 title: Boilers and heating
 summary: Annual boiler service, breakdown repairs, radiators and thermostats. Most repairs are done in one visit with parts from the van.
+art: wave
 order: 5
 priceFrom: "$119"
 priceNote: annual service

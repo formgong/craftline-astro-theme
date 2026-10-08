@@ -74,6 +74,7 @@ export const SITE = {
   trust: {
     license: "PL-000000",
     years: 25,
+    jobs: 12000,
     rating: 4.9,
     reviewCount: 200,
     responseMinutes: 60,
@@ -84,10 +85,11 @@ export const SITE = {
   },
 
   /**
-   * One accent color for buttons, links and illustrations.
-   * `accentText` is the text color on accent buttons: keep a contrast ratio of at least 4.5:1.
+   * One vivid accent for highlighted words, buttons and the solid service cards.
+   * `accentText` is the text color on accent fills: keep a contrast ratio of at least 4.5:1
+   * (the default dark navy on safety orange is about 7:1).
    */
-  theme: { accent: "#c2410c", accentText: "#ffffff" },
+  theme: { accent: "#ff7a29", accentText: "#0b0e1c" },
 
   /**
    * Quote form. PUBLIC_FORMGONG_ACCESS_KEY in .env wins over `accessKey`.

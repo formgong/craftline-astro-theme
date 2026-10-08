@@ -7,7 +7,8 @@ The demo business is **Northside Plumbing & Heating**, a fictional plumber in th
 - **One file to rebrand.** Name, phone, address, service areas, hours, social links, accent color and the form key live in `src/config.ts`.
 - **A home page that tells a story.** The hero picture is the first frame of a scroll story: a leak at 11:40 pm, a form sent from a phone, a van on the way, a fixed price, a dry floor. The house is a real CSS 3D object, seen at a fixed three-quarter angle, with a cutaway front wall where the leak and the repair happen. Everything is driven by CSS (scroll-driven animations). No animation library, no WebGL, no JavaScript.
 - **A quote form that never fakes success.** It shows "Request received" only when the form backend answers `success: true`. Errors and lost connections show an error. Without JavaScript it still works as a plain HTML form.
-- **Fast and accessible.** Static pages, one self-hosted variable font, two tiny scripts (the form and closing the mobile menu). Labels on every field, visible focus, AA contrast, `prefers-reduced-motion` respected, light theme by default and dark via `prefers-color-scheme`.
+- **Dark, light type, one loud accent.** A navy ground, large light-weight display type with the key words in the accent, solid accent service cards with small line animations that explain each service, stat counters, a large quote panel, and an ambient pipe network behind the hero.
+- **Fast and accessible.** Static pages, one self-hosted variable font, two tiny scripts (the form and closing the mobile menu). Labels on every field, visible focus, AA contrast on every text color pair, `prefers-reduced-motion` respected.
 
 Built with Astro 7, Tailwind CSS 4 and TypeScript.
 
@@ -42,7 +43,7 @@ Open `src/config.ts`. The main fields:
 | `hours`, `hoursNote`          | Contact page, footer, JSON-LD opening hours                                  |
 | `social`                      | Footer icons. Real profile URLs are also added to JSON-LD `sameAs`           |
 | `trust`                       | License number, years, rating, response time, call-out fee. Sample values: replace them, then clear `trust.note` |
-| `theme.accent`, `theme.accentText` | The one accent color, and the text color on accent buttons (keep 4.5:1 contrast) |
+| `theme.accent`, `theme.accentText` | The one accent color (highlighted words, buttons, service cards) and the text color on accent fills (keep 4.5:1 contrast) |
 | `formgong`                    | Fallback access key, endpoint and email subject for the quote form           |
 
 Replace the logo in `src/components/Logo.astro` and `public/favicon.svg`, and regenerate `public/og.png` (1200×630) and `public/apple-touch-icon.png` (180×180).
@@ -76,7 +77,8 @@ Submissions arrive by email and, if you connect it, in Telegram. The free plan c
 
 ## Edit the content
 
-- **Services:** one Markdown file per service in `src/content/services/`. Frontmatter: `title`, `summary`, `order`, `priceFrom`, `priceNote`, `duration`, `included` (list) and `featured` (the dark card shown first in the grid). The body is the service page.
+- **Services:** one Markdown file per service in `src/content/services/`. Frontmatter: `title`, `summary`, `order`, `priceFrom`, `priceNote`, `duration`, `included` (list), `featured` (adds the emergency number to the card) and `art`, the card's line animation: `pulse`, `sonar`, `drain`, `bars`, `wave` or `drip` (see `src/components/ServiceArt.astro`). The body is the service page.
+- **Headings:** wrap key words in asterisks to show them in the accent, for example `title="What we fix, and what it *usually costs*"` (section headings, page headers and the quote section).
 - **Testimonials:** `src/content/testimonials.json`. Each review can point to a service by its file name. The demo reviews are samples and are labeled as such on the page.
 - **FAQ:** `src/content/faq.json`.
 - **Page copy:** the home page story captions are in `src/components/story/StoryHero.astro`; the hero headline and bullets in `src/pages/index.astro`.
@@ -107,22 +109,26 @@ Two CSS details that keep it working:
 - Scroll-driven rules use longhand properties (`animation-name`, `animation-timeline`, …). A minifier can merge a shorthand and `animation-timeline` into one declaration that Chrome rejects.
 - Wrappers around revealed content use `overflow: clip`, not `overflow: hidden`. `overflow: hidden` creates a scroll container, and a view timeline inside it would track that box instead of the page.
 
+## Look
+
+Dark first: navy ground (`--c-bg`), near-white type, one accent from `theme.accent`. Display type is Urbanist at a light weight; the key words of each heading take the accent and a thin accent rule follows the lead. Service cards are solid accent blocks with dark type. Colors are tokens at the top of `src/styles/global.css`.
+
 ## Motion
 
-All motion is CSS and SVG. Page-to-page transitions use native cross-document View Transitions (`@view-transition`), so there is no client router. Sections fade in with `animation-timeline: view()` where supported. Hover effects move only `transform` and `opacity`. With `prefers-reduced-motion: reduce` there are no transitions, reveals or ambient animations.
+All motion is CSS and SVG. Page-to-page transitions use native cross-document View Transitions (`@view-transition`), so there is no client router. Sections fade in with `animation-timeline: view()` where supported. The stat numbers count up once as they scroll in (a registered integer property printed with `counter()`; screen readers get the plain number). The pipe network behind the hero (`src/components/story/PipeNetwork.astro`) is generated at build time from a fixed seed, with slow water pulses along some runs. Hover effects move only `transform` and `opacity`. With `prefers-reduced-motion: reduce` there are no transitions, reveals, counters or ambient animations: everything shows its final state.
 
 ## Project structure
 
 ```text
 src/
 ├── components/
-│   ├── story/          StoryHero, StoryScene (SVG layers), House3D (CSS 3D house), StoryVignette (static fallback pictures)
-│   ├── sections/       Trust strip, services grid, how it works, areas, reviews, FAQ, quote section
+│   ├── story/          StoryHero, StoryScene (SVG layers), House3D (CSS 3D house), PipeNetwork, StoryVignette (static fallback pictures)
+│   ├── sections/       Stats, services grid, quote panel, how it works, areas, reviews, FAQ, quote section
 │   ├── illustrations/  Van, map placeholder
 │   ├── QuoteForm.astro The form and its script
 │   ├── Head.astro      Meta tags, Open Graph, JSON-LD
 │   ├── Header.astro, Footer.astro, Logo.astro, Icon.astro, icons.ts
-│   └── PageHeader.astro, SectionHeading.astro, ServiceCard.astro
+│   └── PageHeader.astro, SectionHeading.astro, Highlight.astro, ServiceCard.astro, ServiceArt.astro
 ├── content/            services/*.md, testimonials.json, faq.json
 ├── layouts/            BaseLayout.astro
 ├── lib/schema.ts       JSON-LD built from the config
@@ -139,4 +145,4 @@ public/                 favicon.svg, og.png, apple-touch-icon.png
 
 ## License
 
-MIT, see `LICENSE`. The illustrations and icons were drawn for this theme and are covered by the same license. The font is Plus Jakarta Sans, licensed under the SIL Open Font License 1.1 and installed from `@fontsource-variable/plus-jakarta-sans`.
+MIT, see `LICENSE`. The illustrations and icons were drawn for this theme and are covered by the same license. The font is Urbanist, licensed under the SIL Open Font License 1.1 and installed from `@fontsource-variable/urbanist`.

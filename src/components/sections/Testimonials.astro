@@ -1,6 +1,5 @@
 ---
 import { getCollection, getEntry } from "astro:content";
-import Icon from "../Icon.astro";
 import SectionHeading from "../SectionHeading.astro";
 
 const reviews = await Promise.all(
@@ -10,44 +9,28 @@ const reviews = await Promise.all(
     serviceTitle: t.data.service ? (await getEntry(t.data.service))?.data.title : undefined,
   })),
 );
-const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 ---
 
-<section class="section border-y border-line bg-surface" aria-labelledby="reviews-title">
+<section class="section" aria-labelledby="reviews-title">
   <div class="container-x">
     <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-      <SectionHeading id="reviews-title" title="Recent jobs, in customers' words" />
+      <SectionHeading id="reviews-title" title="Recent jobs, in *customers' words*" />
       <p class="reveal text-sm text-muted lg:max-w-xs lg:text-right">Sample reviews for the demo. Replace them in src/content/testimonials.json.</p>
     </div>
-    <ul class="stagger mt-14 grid gap-5 lg:grid-cols-3">
+    <ul class="stagger mt-14 grid gap-12 lg:grid-cols-3 lg:gap-10">
       {
         reviews.map((r, i) => (
           <li style={`--i:${i}`}>
-            <figure class="card flex h-full flex-col bg-bg p-7 sm:p-8">
-              <div class="flex gap-0.5 text-accent" role="img" aria-label={`${r.rating} out of 5 stars`}>
-                {Array.from({ length: 5 }, (_, s) => (
-                  <Icon name="star" size={18} class={s < r.rating ? "" : "opacity-25"} />
-                ))}
-              </div>
-              <blockquote class="mt-5 flex-1 text-lg leading-relaxed">
-                <p>“{r.quote}”</p>
+            <figure class="flex h-full flex-col border-t border-line pt-8">
+              <span class="text-6xl leading-[0.6] font-light text-accent-ink" aria-hidden="true">“</span>
+              <blockquote class="mt-4 flex-1 text-[1.3125rem] leading-[1.45] font-light">
+                <p>{r.quote}</p>
               </blockquote>
-              <figcaption class="mt-7 flex items-center gap-3.5 border-t border-line pt-6">
-                <span class="grid size-11 place-items-center rounded-full bg-accent-soft text-sm font-bold text-accent-ink" aria-hidden="true">
-                  {initials(r.name)}
-                </span>
-                <span>
-                  <span class="block font-bold">{r.name}</span>
-                  <span class="block text-sm text-muted">
-                    {r.location}
-                    {r.serviceTitle && <> · {r.serviceTitle}</>}
-                  </span>
+              <figcaption class="mt-8">
+                <span class="block font-semibold">{r.name}</span>
+                <span class="mt-0.5 block text-sm text-muted">
+                  {r.location}
+                  {r.serviceTitle && <> · {r.serviceTitle}</>} · {r.rating} out of 5
                 </span>
               </figcaption>
             </figure>

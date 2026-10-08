@@ -1,6 +1,7 @@
 ---
 title: Emergency plumbing
 summary: Burst pipes, overflowing toilets and no water at all. A plumber is usually with you within 60 minutes, at any hour.
+art: pulse
 order: 1
 priceFrom: "$129"
 priceNote: call-out, taken off the repair

@@ -1,6 +1,7 @@
 ---
 title: Leak detection and repair
 summary: We find hidden leaks with acoustic and thermal tools, so we open one small patch of wall instead of a whole room.
+art: sonar
 order: 2
 priceFrom: "$189"
 priceNote: survey with written report

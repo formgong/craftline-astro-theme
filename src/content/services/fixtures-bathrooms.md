@@ -1,6 +1,7 @@
 ---
 title: Fixtures and bathrooms
 summary: Faucets, toilets, showers, sinks and appliance hookups installed neatly, sealed properly and tested before we leave.
+art: drip
 order: 6
 priceFrom: "$99"
 priceNote: per fixture, plus parts

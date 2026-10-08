@@ -1,7 +1,9 @@
 ---
 import Icon from "./Icon.astro";
+import Highlight from "./Highlight.astro";
 
 interface Props {
+  /** Wrap key words in *asterisks* to show them in the accent color. */
   title: string;
   lead?: string;
   crumbs?: { label: string; href?: string }[];
@@ -34,7 +36,7 @@ const { title, lead, crumbs = [] } = Astro.props;
     }
     <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
       <div class="max-w-3xl">
-        <h1 class="h-display text-[clamp(2.25rem,1.6rem+2.8vw,3.75rem)]">{title}</h1>
+        <h1 class="h-display text-[clamp(2.5rem,1.6rem+3.2vw,4.25rem)]"><Highlight text={title} /></h1>
         {lead && <p class="lead mt-6">{lead}</p>}
       </div>
       <slot />

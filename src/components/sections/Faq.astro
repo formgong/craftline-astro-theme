@@ -10,11 +10,11 @@ const faqs = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.o
 <section class="section" aria-labelledby="faq-title">
   <div class="container-x grid gap-12 lg:grid-cols-12 lg:gap-16">
     <div class="lg:col-span-5">
-      <SectionHeading id="faq-title" title="Price, timing and the guarantee" />
-      <div class="card reveal mt-8 p-6 sm:p-7">
-        <p class="font-bold">Something not covered here?</p>
-        <p class="mt-2 text-muted">Call the office. A plumber or our dispatcher picks up, 7 days a week.</p>
-        <a href={`tel:${SITE.phone.tel}`} class="btn btn-primary mt-5">
+      <SectionHeading id="faq-title" title="Price, timing and *the guarantee*" />
+      <div class="card-accent reveal mt-10 p-7 sm:p-8">
+        <p class="text-xl font-semibold">Something not covered here?</p>
+        <p class="mt-2 font-medium opacity-80">Call the office. A plumber or our dispatcher picks up, 7 days a week.</p>
+        <a href={`tel:${SITE.phone.tel}`} class="btn btn-dark mt-6">
           <Icon name="phone" />
           {SITE.phone.display}
         </a>
@@ -51,8 +51,8 @@ const faqs = (await getCollection("faq")).sort((a, b) => a.data.order - b.data.o
     justify-content: space-between;
     gap: 1.5rem;
     padding: 1.5rem 0;
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 500;
     letter-spacing: -0.01em;
     cursor: pointer;
     list-style: none;

@@ -9,6 +9,7 @@ import { SITE } from "../../config";
 import Icon from "../Icon.astro";
 import StoryScene from "./StoryScene.astro";
 import StoryVignette from "./StoryVignette.astro";
+import PipeNetwork from "./PipeNetwork.astro";
 
 interface Props {
   title: string;
@@ -56,7 +57,10 @@ const chapters = [
 
 <section class="story" aria-labelledby="hero-title">
   <div class="story-grid container-x">
-    <div class="story-hero">
+    <div class="story-hero relative isolate">
+      <svg class="net-fade pointer-events-none absolute inset-x-0 -top-6 -z-10 h-[calc(100%+3rem)] w-full text-ink lg:hidden" viewBox="0 0 400 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <PipeNetwork x={10} y={30} w={380} h={580} cols={5} rows={7} seed={5} />
+      </svg>
       <p class="text-sm font-semibold text-muted">
         {SITE.address.city} and {SITE.serviceAreas.length - 1} nearby towns · Emergency line open 24/7
       </p>

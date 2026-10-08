@@ -1,6 +1,7 @@
 ---
 title: Water heaters
 summary: Repairs, replacements and tankless upgrades for gas and electric water heaters, usually done the same day.
+art: bars
 order: 4
 priceFrom: "$169"
 priceNote: repair, new units priced on site

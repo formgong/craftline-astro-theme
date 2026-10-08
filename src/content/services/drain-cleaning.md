@@ -1,6 +1,7 @@
 ---
 title: Drain cleaning
 summary: Slow sinks, gurgling showers and blocked sewer lines cleared properly, with a camera check so the clog doesn't come back.
+art: drain
 order: 3
 priceFrom: "$149"
 priceNote: most sinks and showers

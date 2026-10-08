@@ -12,7 +12,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
   <div class="container-x relative flex h-16 items-center justify-between gap-3 sm:h-[72px]">
     <a href="/" class="header-logo flex min-w-0 items-center gap-3 rounded-lg">
       <Logo class="size-9 sm:size-10" />
-      <span class="truncate text-[1.0625rem] leading-none font-extrabold tracking-tight">
+      <span class="truncate text-[1.125rem] leading-none font-bold tracking-tight">
         <span class="xl:hidden">{SITE.shortName}</span>
         <span class="hidden xl:inline">{SITE.name}</span>
       </span>
@@ -38,7 +38,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
         {SITE.phone.display}
       </a>
       <a href="/contact/#quote" class="btn btn-primary hidden min-h-11 px-4 lg:inline-flex">Get a quote</a>
-      <a href={`tel:${SITE.phone.tel}`} class="btn btn-primary min-h-11 px-4 md:hidden">
+      <a href={`tel:${SITE.phone.tel}`} class="btn btn-secondary min-h-11 px-4 md:hidden">
         <Icon name="phone" />
         Call<span class="sr-only"> {SITE.phone.display}</span>
       </a>
@@ -52,7 +52,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
     <div class="container-x flex h-16 items-center justify-between">
       <a href="/" class="flex items-center gap-3 rounded-lg">
         <Logo class="size-9" />
-        <span class="text-[1.0625rem] leading-none font-extrabold tracking-tight">{SITE.shortName}</span>
+        <span class="text-[1.125rem] leading-none font-bold tracking-tight">{SITE.shortName}</span>
       </a>
       <button type="button" popovertarget="mobile-nav" popovertargetaction="hide" class="menu-btn inline-grid" aria-label="Close menu">
         <Icon name="x" />
@@ -141,10 +141,13 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
     place-items: center;
     width: 2.75rem;
     height: 2.75rem;
-    border-radius: 0.75rem;
-    border: 1px solid var(--c-line);
-    background: var(--c-surface);
-    color: var(--c-ink);
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-text);
+    transition: transform 0.25s var(--ease-out);
+  }
+  .menu-btn:hover {
+    transform: scale(1.06);
   }
   .menu-btn :global(.icon) {
     width: 1.375rem;
@@ -169,8 +172,8 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
     align-items: center;
     justify-content: space-between;
     padding: 1.125rem 0.25rem;
-    font-size: 1.375rem;
-    font-weight: 700;
+    font-size: 1.75rem;
+    font-weight: 300;
     letter-spacing: -0.02em;
   }
   .mobile-link :global(.icon) {

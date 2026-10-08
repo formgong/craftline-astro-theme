@@ -14,8 +14,10 @@ const services = defineCollection({
     priceFrom: z.string().optional(),
     /** What the starting price covers, e.g. "most sinks and showers". */
     priceNote: z.string().optional(),
-    /** Shown as the large dark card at the start of the services grid. */
+    /** Shown first in the grid, with the emergency phone number. */
     featured: z.boolean().default(false),
+    /** The small line animation on the card (see src/components/ServiceArt.astro). */
+    art: z.enum(["pulse", "sonar", "drain", "bars", "wave", "drip"]).default("pulse"),
     /** Typical time on site, e.g. "1–2 hours". */
     duration: z.string().optional(),
     /** Bullet points in the sidebar of the service page. */
