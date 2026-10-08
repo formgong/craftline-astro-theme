@@ -5,7 +5,7 @@ A free Astro theme for local service businesses: plumbers, electricians, cleaner
 The demo business is **Northside Plumbing & Heating**, a fictional plumber in the fictional town of Fernhollow. Everything you see is sample content: phone numbers use the 555-01xx range reserved for fiction, and every email and link uses `example.com`.
 
 - **One file to rebrand.** Name, phone, address, service areas, hours, social links, accent color and the form key live in `src/config.ts`.
-- **A home page that tells a story.** The hero picture is the first frame of a scroll story: a leak at 11:40 pm, a form sent from a phone, a van on the way, a fixed price, a dry floor. The house is a real CSS 3D object that turns slowly in the hero and faces you once the story starts. Everything is driven by CSS (scroll-driven animations). No animation library, no WebGL, no JavaScript.
+- **A home page that tells a story.** The hero picture is the first frame of a scroll story: a leak at 11:40 pm, a form sent from a phone, a van on the way, a fixed price, a dry floor. The house is a real CSS 3D object, seen at a fixed three-quarter angle, with a cutaway front wall where the leak and the repair happen. Everything is driven by CSS (scroll-driven animations). No animation library, no WebGL, no JavaScript.
 - **A quote form that never fakes success.** It shows "Request received" only when the form backend answers `success: true`. Errors and lost connections show an error. Without JavaScript it still works as a plain HTML form.
 - **Fast and accessible.** Static pages, one self-hosted variable font, two tiny scripts (the form and closing the mobile menu). Labels on every field, visible focus, AA contrast, `prefers-reduced-motion` respected, light theme by default and dark via `prefers-color-scheme`.
 
@@ -94,7 +94,7 @@ Four files:
 
 The scene is a 1200×600 canvas anchored to the right edge. The frame is a size container, and one canvas unit is `--u = max(100cqw / 1200, 100cqh / 600)` pixels, so the SVG layers and the 3D house line up exactly at any frame size. On wide layouts the unit is capped so the house stays in the right half.
 
-The house turns slowly on its own in the hero (24 s per turn). That turn fades out as chapter 1 arrives, so the house faces you for the leak and the repair. Each chapter then adds a small sway, and on "done" it turns to a three-quarter view. The idle turn uses two registered custom properties (`--spin` on a clock, `--spin-on` on the scroll), so the scroll never fights the clock.
+The house itself never moves. It sits at one fixed three-quarter angle (the cutaway faces you, the left wall and the roof show), and only the things inside the cutaway and the cards around it animate. An earlier version turned the house with the scroll; on a pinned stage that read as the house jumping, so the 3D wrappers now have no animations at all.
 
 Each caption block declares a named view timeline (`--ch1` … `--ch6`) and the story wrapper shares them with `timeline-scope`. Every animated part of the scene follows exactly one chapter, with `animation-range` set per layout. When something has to appear in one chapter and leave in a later one, it sits inside two nested groups with one animation each. On desktop the scene is pinned next to the captions; on phones it is pinned at the top (about 55% of the screen) and the captions scroll underneath.
 

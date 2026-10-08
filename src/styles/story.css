@@ -184,20 +184,11 @@
   transform: rotateX(90deg) translateZ(calc(37 * var(--u)));
 }
 
-/* Hero turntable. --spin runs on a clock, --spin-on fades from 1 to 0 as chapter 1 arrives,
-   so the house unwinds to face the viewer by the shortest way (|spin| ≤ 180°). */
-@property --spin {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-@property --spin-on {
-  syntax: "<number>";
-  inherits: false;
-  initial-value: 1;
-}
-.h3d-idle {
-  transform: rotateY(calc(var(--spin) * var(--spin-on)));
+/* One fixed three-quarter view: the cutaway faces the viewer, the left wall and the roof
+   show. The house never turns: transforming a preserve-3d subtree while the stage is pinned
+   is what made it jump during scroll. */
+.h3d-pose {
+  transform: rotateY(20deg);
 }
 .story-heading {
   font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
@@ -638,28 +629,6 @@
       animation-range: var(--ch-range);
     }
 
-    /* the house: idle turntable in the hero, then one rotation wrapper per chapter */
-    .h3d-idle {
-      animation-name: h3d-spin, h3d-settle;
-      animation-duration: 24s, auto;
-      animation-delay: -12s, 0s;
-      animation-timing-function: linear, linear;
-      animation-iteration-count: infinite, 1;
-      animation-fill-mode: none, both;
-      animation-timeline: auto, --ch1;
-      animation-range: normal, var(--ch-range);
-    }
-    .h3d-c2, .h3d-c3, .h3d-c4, .h3d-c5, .h3d-c6 {
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-range: var(--ch-range);
-    }
-    .h3d-c2 { animation-name: h3d-sway-left; animation-timeline: --ch2; }
-    .h3d-c3 { animation-name: h3d-sway-right; animation-timeline: --ch3; }
-    .h3d-c4 { animation-name: h3d-look-at-van; animation-timeline: --ch4; }
-    .h3d-c5 { animation-name: h3d-sway-left-small; animation-timeline: --ch5; }
-    .h3d-c6 { animation-name: h3d-three-quarter; animation-timeline: --ch6; }
-
     /* 1 · lights go out */
     .sc-light-a { animation-name: k-out-25-50; animation-timeline: --ch1; }
     .sc-light-b { animation-name: k-out-45-75; animation-timeline: --ch1; }
@@ -865,37 +834,4 @@
   0% { opacity: 0.25; }
   30%, 70% { opacity: 1; }
   100% { opacity: 0.25; }
-}
-
-@keyframes h3d-spin {
-  from { --spin: -180deg; }
-  to { --spin: 180deg; }
-}
-@keyframes h3d-settle {
-  from { --spin-on: 1; }
-  to { --spin-on: 0; }
-}
-@keyframes h3d-sway-left {
-  0%, 10% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
-  50% { transform: rotateY(-12deg); animation-timing-function: ease-in-out; }
-  90%, 100% { transform: rotateY(0deg); }
-}
-@keyframes h3d-sway-right {
-  0%, 10% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
-  50% { transform: rotateY(12deg); animation-timing-function: ease-in-out; }
-  90%, 100% { transform: rotateY(0deg); }
-}
-@keyframes h3d-look-at-van {
-  0%, 25% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
-  65% { transform: rotateY(15deg); animation-timing-function: ease-in-out; }
-  95%, 100% { transform: rotateY(0deg); }
-}
-@keyframes h3d-sway-left-small {
-  0%, 10% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
-  40% { transform: rotateY(-9deg); animation-timing-function: ease-in-out; }
-  80%, 100% { transform: rotateY(0deg); }
-}
-@keyframes h3d-three-quarter {
-  0%, 10% { transform: rotateY(0deg); animation-timing-function: ease-in-out; }
-  75%, 100% { transform: rotateY(-36deg); }
 }
