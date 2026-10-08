@@ -364,24 +364,22 @@
     }
 
     @media (min-width: 1024px) {
+      /* The scene is the background of the whole story: container-wide, pinned under the
+         header, with the hero text and then the chapter captions passing over its night sky. */
       .story-grid {
         --ch-range: cover 10% cover 60%;
-        padding-block: 0;
-      }
-      .story-hero {
-        min-height: calc(100svh - 4.5rem);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding-block: 2rem;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: 0;
+        padding-block: 1rem 0;
       }
       .story-stage {
-        grid-column: 2;
+        grid-column: 1 / -1;
         grid-row: 1 / span 2;
-        top: 4.5rem;
-        height: calc(100svh - 4.5rem);
-        padding-block: 1.5rem;
-        justify-content: flex-end;
+        align-self: start;
+        top: 5rem;
+        height: calc(100svh - 6rem);
+        padding: 0;
+        z-index: 0;
         background: none;
         box-shadow: none;
         clip-path: none;
@@ -390,19 +388,76 @@
         display: none;
       }
       .story-frame {
-        width: min(100%, calc(100svh - 4.5rem - 3rem));
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        aspect-ratio: auto;
       }
+      .story-hero,
       .story-chapters {
         grid-column: 1;
+        position: relative;
+        z-index: 1;
+        padding-inline: clamp(2rem, 4vw, 4rem);
+        color: #eef2f8;
+      }
+      .story-hero {
+        grid-row: 1;
+        min-height: calc(100svh - 6rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-block: 2rem;
+      }
+      .story-hero .text-muted,
+      .story-chapters .chapter-body {
+        color: rgb(238 242 248 / 0.74);
+      }
+      .story-hero .text-accent-ink,
+      .story-chapters .chapter-time {
+        color: var(--sc-pipe);
+      }
+      .story-hero .btn-secondary {
+        color: #eef2f8;
+        background: rgb(255 255 255 / 0.08);
+        border-color: rgb(255 255 255 / 0.22);
+      }
+      .story-chapters {
         grid-row: 2;
+      }
+      .story-heading {
+        color: rgb(238 242 248 / 0.6);
       }
       .story-chapters ol {
         display: block;
       }
       .chapter {
-        min-height: 80svh;
+        min-height: 60svh;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .chapter-title {
+        font-size: clamp(2rem, 0.9rem + 2.4vw, 3.25rem);
+      }
+      .chapter-body {
+        max-width: 30rem;
+        font-size: 1.1875rem;
       }
     }
+
+    /* The caption being read is bright, its neighbours dim, so the column never looks empty. */
+    .chapter-text > * {
+      animation-name: k-caption-focus;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-range: cover 15% cover 85%;
+    }
+    .chapter-1 .chapter-text > * { animation-timeline: --ch1; }
+    .chapter-2 .chapter-text > * { animation-timeline: --ch2; }
+    .chapter-3 .chapter-text > * { animation-timeline: --ch3; }
+    .chapter-4 .chapter-text > * { animation-timeline: --ch4; }
+    .chapter-5 .chapter-text > * { animation-timeline: --ch5; }
+    .chapter-6 .chapter-text > * { animation-timeline: --ch6; }
 
     /* Shared settings for everything the chapters drive. */
     .sc-light-a, .sc-light-b,
@@ -616,4 +671,10 @@
   .story-frame {
     box-shadow: 0 0 0 1px var(--c-line);
   }
+}
+
+@keyframes k-caption-focus {
+  0% { opacity: 0.25; }
+  30%, 70% { opacity: 1; }
+  100% { opacity: 0.25; }
 }
