@@ -151,6 +151,11 @@ public/                 favicon.svg, og.png, apple-touch-icon.png
 
 `npm run build` produces a static site in `dist/` that any static host can serve. On Vercel or Netlify, set `PUBLIC_FORMGONG_ACCESS_KEY` in the project's build environment variables: the key is read at build time. The Deploy to Cloudflare button stores it as a Worker secret instead, and `worker.js` puts it into the form as each page is served. Set `url` in `src/config.ts` first so canonical links, the sitemap and the form redirect point at your domain.
 
+
+## More free form tools
+
+- Build a form field by field and copy plain HTML: https://formgong.com/en/tools/html-form-generator/
+
 ## License
 
 MIT, see `LICENSE`. The illustrations and icons were drawn for this theme and are covered by the same license. The font is Urbanist, licensed under the SIL Open Font License 1.1 and installed from `@fontsource-variable/urbanist`.
